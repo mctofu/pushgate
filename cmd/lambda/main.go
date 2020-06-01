@@ -32,8 +32,11 @@ func (h *handler) handle(ctx context.Context, snsEvent events.SNSEvent) error {
 			if err, ok := err.(*pushgate.RetryableError); ok {
 				return err
 			}
-			// we are doing something wrong, log but don't return an error so SNS doesn't retry
-			log.Printf("Failed to send push: %v", err)
+			// we are doing something wrong, try to notify/log but don't return an error so SNS doesn't retry
+			log.Printf("Failed to send push: %v\n", err)
+			if err := h.sender.Send(h.recipient, &pushgate.Message{Title: "PushGate error", Body: err.Error()}); err != nil {
+				log.Printf("Failed to send error push: %v\n", err)
+			}
 		}
 	}
 
