@@ -13,8 +13,12 @@ func NewPushoverSender(key string) *PushoverSender {
 }
 
 func (p *PushoverSender) Send(rcpt string, msg *Message) error {
-	pMsg := pushover.NewMessageWithTitle(msg.Body, msg.Title)
+	pMsg := pushover.NewMessageWithTitle(
+		trim(msg.Body, 1024),
+		trim(msg.Title, 250),
+	)
 	pRcpt := pushover.NewRecipient(rcpt)
+
 	_, err := p.app.SendMessage(pMsg, pRcpt)
 	if err != nil {
 		if err == pushover.ErrHTTPPushover {
@@ -24,4 +28,11 @@ func (p *PushoverSender) Send(rcpt string, msg *Message) error {
 	}
 
 	return nil
+}
+
+func trim(s string, limit int) string {
+	if len(s) < limit {
+		return s
+	}
+	return s[0:limit-3] + "..."
 }
