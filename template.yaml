@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Forwards SNS messages to Pushover
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: pushgate
+    Description: SNS triggered lambda that forwards SNS messages to Pushover
+    Author: mctofu
+    SpdxLicenseId: MIT
+    LicenseUrl: LICENSE
+    ReadmeUrl: README.md
+    HomePageUrl: https://github.com/mctofu/pushgate
+    SourceCodeUrl: https://github.com/mctofu/pushgate
+
+Parameters:
+  PushoverKey:
+    Description: "Pushover API key"
+    Type: "String"
+  PushoverRecipient:
+    Description: "Pushover recipient ID to forward SNS message to"
+    Type: "String"
+
+Resources:
+  PushGateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: go1.x
+      Handler: build/lambda
+      Timeout: 15
+      MemorySize: 128
+      Environment:
+        Variables:
+          PUSHOVER_KEY: !Ref PushoverKey
+          PUSHOVER_RCPT: !Ref PushoverRecipient
+      Events:
+        Push:
+          Type: SNS
+          Properties:
+            Topic:
+              Ref: PushTopic
+
+  PushTopic:
+    Type: AWS::SNS::Topic
