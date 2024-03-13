@@ -9,6 +9,10 @@ jobs:
   build:
     name: Deploy
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
 
     - name: Check out code into the Go module directory
@@ -39,8 +43,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        role-to-assume: ${{ secrets.AWS_ROLE }}
+        role-to-assume: deploy-pushgate
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: Deploy
@@ -49,3 +53,4 @@ jobs:
         cd build
         sam package --s3-bucket ${{ secrets.SAM_S3_BUCKET }} --s3-prefix pushgate --output-template-file packaged-template.yaml
         sam publish --template-file packaged-template.yaml
+
