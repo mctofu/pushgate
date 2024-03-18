@@ -5,7 +5,7 @@ go 1.22.1
 require (
 	github.com/aws/aws-lambda-go v1.46.0
 	github.com/gregdel/pushover v1.3.0
-	github.com/stretchr/testify v1.7.2
+	github.com/stretchr/testify v1.9.0
 )
 
 require (
