@@ -3,9 +3,9 @@ module github.com/mctofu/pushgate
 go 1.22.1
 
 require (
-	github.com/aws/aws-lambda-go v1.46.0
-	github.com/gregdel/pushover v1.3.0
-	github.com/stretchr/testify v1.7.2
+	github.com/aws/aws-lambda-go v1.47.0
+	github.com/gregdel/pushover v1.3.1
+	github.com/stretchr/testify v1.10.0
 )
 
 require (
