@@ -16,10 +16,10 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Set up Go 1.x
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v6
       with:
         go-version-file: 'go.mod'
 
@@ -31,7 +31,7 @@ jobs:
         go build -v -o build/lambda github.com/mctofu/pushgate/cmd/lambda
 
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: 3.8
 
@@ -41,7 +41,7 @@ jobs:
         pip install aws-sam-cli
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
+      uses: aws-actions/configure-aws-credentials@v5
       with:
         role-to-assume: ${{ secrets.AWS_ROLE }}
         role-session-name: deploy-pushgate
